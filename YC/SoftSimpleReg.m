@@ -65,16 +65,20 @@ Plot.off = 0;
 Plot.pl = 0;
 Plot.ori = '13';
 Plot.N = 100;
-Plot.MaxEz = 1.1;
+Plot.MaxEz = 5;
 Plot.MaxH = Plot.MaxEz/c_eta_0;
 Plot.pv = [0 0 90];
 Plot.reglim = [0 xMax{1} 0 yMax];
 
 % Boundary Conditions and Plane Wave Source
-bc{1}.NumS = 1;                  % number of sources
+bc{1}.NumS = 2;                  % number of sources
 bc{1}.s(1).xpos = nx{1}/(4) + 1; % position of the source
 bc{1}.s(1).type = 'ss';          % source type
 bc{1}.s(1).fct = @PlaneWaveBC;
+
+bc{1}.s(2).xpos = 3*nx{1}/(4) + 1; % position of the source
+bc{1}.s(2).type = 'ss';          % source type
+bc{1}.s(2).fct = @PlaneWaveBC;
 
 % Source parameters
 % mag = -1/c_eta_0;
@@ -88,6 +92,19 @@ s = 0;               % A parameter related to the source's position or other att
 y0 = yMax / 2;       % Source’s y-position
 sty = 1.5 * lambda;  % Spatial width of the source in the y-direction
 bc{1}.s(1).paras = {mag,phi,omega,betap,t0,st,s,y0,sty,'s'}; % Sets up the parameters of the source
+
+% Source parameters
+mag = -1/c_eta_0;
+mag = 1;             % Magnitude of the source
+phi = 0;             % Phase shift
+betap = 0;
+omega = f * 2 * pi;  % Angular frequency (2 * pi * frequency)
+t0 = 30e-15;         % Time offset for the source
+st = 15e-15;         % Temporal width of the source
+s = 0;               % A parameter related to the source's position or other attributes
+y0 = yMax / 2;       % Source’s y-position
+sty = 1.5 * lambda;  % Spatial width of the source in the y-direction
+bc{1}.s(2).paras = {mag,phi,omega,betap,t0,st,s,y0,sty,'s'}; % Sets up the parameters of the source
 
 Plot.y0 = round(y0/dx);
 
@@ -108,7 +125,12 @@ Reg.yoff{1} = 0;
 RunYeeReg
 
 
-
-
-
-
+figure;
+plot([1 nx{1}], [1 1], 'k--'); % Show the boundary of the grid
+hold on;
+plot(bc{1}.s(1).xpos, 1, 'ro', 'MarkerSize', 10);  % Plot first source position
+plot(bc{1}.s(2).xpos, 1, 'bo', 'MarkerSize', 10);  % Plot second source position
+xlabel('X Position (Grid Points)');
+ylabel('Source');
+legend('Grid Boundary', 'Source 1', 'Source 2');
+title('Source Positions');
