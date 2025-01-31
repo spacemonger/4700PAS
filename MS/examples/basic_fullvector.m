@@ -31,7 +31,7 @@ rw_end = 1.0;       % Ending ridge half-width
 rw_steps = 1;      % Number of steps from 0.325 to 1.0
 
 % Material Changes
-n2_start = 3.305;
+n2_start = 3.34;
 n2_end = 3.44;
 n2_steps = 10;
 
